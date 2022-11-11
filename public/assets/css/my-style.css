@@ -1,0 +1,53 @@
+.mg-bottom{
+    margin-bottom: 5%;
+}
+.mg-top{
+    margin-top:5%;
+}
+.br-radius{
+    border-radius: 50%;
+}
+.my-icon{
+    margin-bottom: -50%;
+}
+.fcoin-left{
+    margin-left:-5%;
+    width:100%
+}
+.my-weight{
+    font-weight: bolder;
+    font-size: 4rem;
+    margin-bottom: 7%;
+    color: black;
+}
+.my-center p{
+    color:black;
+    display:flex;
+    justify-content:center;
+}
+.mt-footer{
+    display: flex;
+    align-self: center;
+    justify-content: center;
+    text-align: center;
+}
+.mt-footer a{
+    color: whitesmoke;
+}
+.my-flex{
+    display:flex;
+    align-items: flex-start;
+    justify-content: space-around;
+}
+.h-margin{
+    margin: 1% 5%
+}
+.my-green-title{
+    font-size: 15px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.25px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  color:#90ca84
+}
