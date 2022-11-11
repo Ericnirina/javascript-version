@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/jsx-key */
 // ** React Imports
 import { useState } from 'react'
 
@@ -20,6 +22,8 @@ import Button from '@mui/material/Button'
 
 // ** Icons Imports
 import Close from 'mdi-material-ui/Close'
+import { addFile, getFileById } from 'src/service/files'
+import { useEffect } from 'react'
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 120,
@@ -48,112 +52,87 @@ const ResetButtonStyled = styled(Button)(({ theme }) => ({
 const TabAccount = () => {
   // ** State
   const [openAlert, setOpenAlert] = useState(true)
-  const [imgSrc, setImgSrc] = useState('/images/avatars/1.png')
+  const [files, setFiles]= useState([])
+  const [listFile, setlistFile] = useState()
 
-  const onChange = file => {
+  const onChange = async (e) => {
     const reader = new FileReader()
-    const { files } = file.target
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result)
-      reader.readAsDataURL(files[0])
-    }
+    const files = e.target.files
+    console.log(files)
+    setFiles(files)
   }
+
+  const handlerSave = async (e) => {
+    const response = await addFile(files, "test")
+    
+  }
+
+  const handlerReset = () => {
+    setFiles([])
+  }
+
+  const downloadFile = (url) => {
+    return (<link href={`${process.env.API_URL}${url}`} download></link>)
+  }
+
+  useEffect(async () => {
+    if(!listFile){
+      const data = await getFileById(1);
+      console.log(data.attributes.file.data)
+      setlistFile(data.attributes.file.data)
+    } 
+  }, [listFile])
 
   return (
     <CardContent>
       <form>
         <Grid container spacing={7}>
           <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <ImgStyled src={imgSrc} alt='Profile Pic' />
+              { files.length !== 0  ? Object.values(files).map( (key, value) => (
+                <p> { key.name } </p>
+              )) : <p>Pas de fichier!</p>}
+            <Box sx={{ display: 'flex', alignItems: 'center' }}> 
               <Box>
                 <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
-                  Upload New Photo
+                  Telecharger le fichier
                   <input
                     hidden
                     type='file'
+                    multiple
                     onChange={onChange}
-                    accept='image/png, image/jpeg'
+                    accept='image/pdf, image/docx'
                     id='account-settings-upload-image'
                   />
                 </ButtonStyled>
-                <ResetButtonStyled color='error' variant='outlined' onClick={() => setImgSrc('/images/avatars/1.png')}>
+                <ResetButtonStyled color='error' variant='outlined' onClick={() => handlerReset()}>
                   Reset
                 </ResetButtonStyled>
                 <Typography variant='body2' sx={{ marginTop: 5 }}>
-                  Allowed PNG or JPEG. Max size of 800K.
+                  docx, pdf, jpg, png, xlsx, ...
                 </Typography>
               </Box>
             </Box>
           </Grid>
 
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Username' placeholder='johnDoe' defaultValue='johnDoe' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Name' placeholder='John Doe' defaultValue='John Doe' />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              type='email'
-              label='Email'
-              placeholder='johnDoe@example.com'
-              defaultValue='johnDoe@example.com'
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Role</InputLabel>
-              <Select label='Role' defaultValue='admin'>
-                <MenuItem value='admin'>Admin</MenuItem>
-                <MenuItem value='author'>Author</MenuItem>
-                <MenuItem value='editor'>Editor</MenuItem>
-                <MenuItem value='maintainer'>Maintainer</MenuItem>
-                <MenuItem value='subscriber'>Subscriber</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Status</InputLabel>
-              <Select label='Status' defaultValue='active'>
-                <MenuItem value='active'>Active</MenuItem>
-                <MenuItem value='inactive'>Inactive</MenuItem>
-                <MenuItem value='pending'>Pending</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField fullWidth label='Company' placeholder='ABC Pvt. Ltd.' defaultValue='ABC Pvt. Ltd.' />
-          </Grid>
-
-          {openAlert ? (
-            <Grid item xs={12} sx={{ mb: 3 }}>
-              <Alert
-                severity='warning'
-                sx={{ '& a': { fontWeight: 400 } }}
-                action={
-                  <IconButton size='small' color='inherit' aria-label='close' onClick={() => setOpenAlert(false)}>
-                    <Close fontSize='inherit' />
-                  </IconButton>
-                }
-              >
-                <AlertTitle>Your email is not confirmed. Please check your inbox.</AlertTitle>
-                <Link href='/' onClick={e => e.preventDefault()}>
-                  Resend Confirmation
-                </Link>
-              </Alert>
-            </Grid>
-          ) : null}
-
           <Grid item xs={12}>
-            <Button variant='contained' sx={{ marginRight: 3.5 }}>
-              Save Changes
+            <Button variant='contained' sx={{ marginRight: 3.5 }} onClick={() => handlerSave()}>
+              Enregister
             </Button>
-            <Button type='reset' variant='outlined' color='secondary'>
-              Reset
-            </Button>
+          </Grid>
+          <Grid item xs={12}>
+             { listFile && Object.values(listFile).map( (key, value) => (
+                <a href={`${process.env.API_URL}${key.attributes.url}`} target='_blank' rel="noreferrer" style={{ textDecoration: "none"}}>
+                  <Button 
+                    variant='outlined' 
+                    sx={{ marginRight: 3.5 }} 
+                    style={{
+                      borderRadius: "70px",
+                      fontWeight: "200"
+                  }}>
+                    {key.attributes.name}
+                  </Button>
+                </a>
+              ))}
           </Grid>
         </Grid>
       </form>
