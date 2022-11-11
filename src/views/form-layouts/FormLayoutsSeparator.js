@@ -27,6 +27,7 @@ import DatePicker from 'react-datepicker'
 // ** Icons Imports
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
+import { createInfo, createUser } from 'src/service/insertion'
 
 const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth {...props} inputRef={ref} label='Prochain audience' autoComplete='off' />
@@ -35,9 +36,11 @@ const CustomInput = forwardRef((props, ref) => {
 export default function FormLayoutsSeparator (){
   // ** States
   const [language, setLanguage] = useState([])
-  const [date, setDate] = useState(null)
+  const [date, setDate] = useState()
+  const [dateAudience, setDateAudience] = useState(date)
+  const [passConfirm, setPassConfirm] = useState("none")
 
-  const [values, setValues] = useState({
+  const [passvalues, setValues] = useState({
     password: '',
     password2: '',
     showPassword: false,
@@ -46,11 +49,11 @@ export default function FormLayoutsSeparator (){
 
   // Handle Password
   const handlePasswordChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value })
+    setValues({ ...passvalues, [prop]: event.target.value })
   }
 
   const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
+    setValues({ ...passvalues, showPassword: !passvalues.showPassword })
   }
 
   const handleMouseDownPassword = event => {
@@ -59,11 +62,11 @@ export default function FormLayoutsSeparator (){
 
   // Handle Confirm Password
   const handleConfirmChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value })
+    setValues({ ...passvalues, [prop]: event.target.value })
   }
 
   const handleClickShowConfirmPassword = () => {
-    setValues({ ...values, showPassword2: !values.showPassword2 })
+    setValues({ ...passvalues, showPassword2: !passvalues.showPassword2 })
   }
 
   const handleMouseDownConfirmPassword = event => {
@@ -83,16 +86,37 @@ export default function FormLayoutsSeparator (){
                 
                 enableReinitialize 
                 initialValues={{
-                    fcoin:'', 
-                    montant: ''
+                  username: '',
+                  email: '', 
+                  adresse: '', 
+                  telephone: '', 
+                  password: '' ,
+                  password2:'',
+                  nomPartie:'',                
+                  nomClient:'',                
+                  etatProcedure:'',                
+                  nomPartieAdverse:'',                
+                  prochainAudience:'',                
+                  juridiction:'',                
                 }} 
                 validationSchema={Yup.object().shape({ 
-                    montant: Yup.number()
-                        .typeError("type error")
-                        .positive("A number can't start with a minus")
-                        .min(500)
-                        .required('require'),
-                    
+                  username: Yup.string().required('Merci de renseigner votre username').min(6, '+ de 6 caractères'),
+                  adresse: Yup.string().required('Merci de renseigner votre adresse'),
+                  telephone: Yup.string().required('Merci de renseigner votre telephone'),
+                  nomClient: Yup.string().required('Merci de renseigner ce champs'),
+                  nomPartie: Yup.string().required('Merci de renseigner ce champs'),
+                  nomPartieAdverse: Yup.string().required('Merci de renseigner ce champs'),
+                  etatProcedure: Yup.string().required('Merci de renseigner ce champs'),
+                  juridiction: Yup.string().required('Merci de renseigner ce champs'),
+                  email: Yup.string().email('Merci de corriger votre Email').required('Merci de renseigner votre Email'), 
+                  password: Yup.string().min(6, 'Your password must contain between 6 and 60 characters.').max(60, 'Your password must contain between 6 and 60 characters.').required('Merci de renseigner votre mot de passe'), 
+                  password2: Yup.string().when("password", {
+                      is: val => (val && val.length > 0 ? true : false),
+                      then: Yup.string().oneOf(
+                      [Yup.ref("password")],
+                      "Vérifier le mot de passe"
+                      )
+                  }) 
                   
                 })} 
                 onSubmit={async (values, { 
@@ -103,18 +127,16 @@ export default function FormLayoutsSeparator (){
                     }) => {
                     try { 
                       
-                      const myAchat = await achat(conversion(values.montant,'FTC'),conversionUsdt(conversion(values.montant,'FTC')),values.montant, 'espèces',etiquette,user.id,"ar");
-                      const numTrans = 'RPM'+myAchat.data.id
-                      const myTransaction = await addTransaction(values.montant,'Achat',numTrans, myAchat.data.id,user.id)
-                      const myCash = await achatCash(myAchat.data.id);
-                      toast.success("On va étudier votre transaction N° "+numTrans+" et veuillez la valider au point cash");
-
+                     
+                      const user = await createUser(values.username,values.email,values.password,values.adresse, values.telephone)
+                      console.log(user.user.id)
+                      const info = await createInfo(values.nomPartie, values.nomClient, values.nomPartieAdverse, values.juridiction,values.etatProcedure,dateAudience,user.user.id)
+                      console.log(info)
                       resetForm(); 
                         setStatus({ success: true }); 
                         setSubmitting(true);
+                      
 
-                        // window.location.reload(false);
-                        handleCloseModalCash()
                       } catch (err) { 
                         console.log(err); 
                         setStatus({ success: false }); 
@@ -133,7 +155,7 @@ export default function FormLayoutsSeparator (){
                 values 
               }) => (
                 
-                <form onSubmit={e => e.preventDefault()}>
+                <form onSubmit={handleSubmit}>
                   <CardContent>
                     <Grid container spacing={5}>
                       <Grid item xs={12}>
@@ -142,62 +164,92 @@ export default function FormLayoutsSeparator (){
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField fullWidth label='Username' placeholder='Username' />
+                        <TextField 
+                        error={Boolean(touched.username && errors.username)} 
+                        helperText={touched.username && errors.username} 
+                        onBlur={handleBlur} 
+                        onChange={handleChange} 
+                        value={values.username}
+                        fullWidth label='Username' placeholder='Username' name='username' />
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField fullWidth type='email' label='Email' placeholder='Email' />
+                        <TextField 
+                        error={Boolean(touched.email && errors.email)} 
+                        helperText={touched.email && errors.email} 
+                        onBlur={handleBlur} 
+                        onChange={handleChange} 
+                        value={values.email}
+                        fullWidth type='email' label='Email' placeholder='Email' name='email' />
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField fullWidth label='Identifiant' placeholder='Identifiant' />
+                        <TextField 
+                         error={Boolean(touched.adresse && errors.adresse)} 
+                         helperText={touched.adresse && errors.adresse} 
+                         onBlur={handleBlur} 
+                         onChange={handleChange} 
+                         value={values.adresse}
+                        fullWidth label='Adresse' placeholder='Adresse' name='adresse'  />
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField fullWidth label='Telephone' placeholder='Telephone' />
+                        <TextField 
+                        error={Boolean(touched.telephone && errors.telephone)} 
+                        helperText={touched.telephone && errors.telephone} 
+                        onBlur={handleBlur} 
+                        onChange={handleChange} 
+                        value={values.telephone}
+                        fullWidth label='Telephone' placeholder='Telephone' name='telephone' />
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <FormControl fullWidth>
-                          <InputLabel htmlFor='form-layouts-separator-password'>Password</InputLabel>
-                          <OutlinedInput
-                            label='Password'
+                      <FormControl fullWidth>
+                          <TextField
+                            error={Boolean(touched.password && errors.password)} 
+                            helperText={touched.password && errors.password} 
+                            onBlur={handleBlur} 
+                            onChange={handleChange}
                             value={values.password}
-                            id='form-layouts-separator-password'
-                            onChange={handlePasswordChange('password')}
-                            type={values.showPassword ? 'text' : 'password'}
-                            endAdornment={
+                            label='Password'
+                            name="password"
+                            id='form-layouts-separator-password-2'
+                            type={passvalues.showPassword ? 'text' : 'password'}
+                            InputProps={{endAdornment:
                               <InputAdornment position='end'>
                                 <IconButton
                                   edge='end'
-                                  onClick={handleClickShowPassword}
-                                  onMouseDown={handleMouseDownPassword}
                                   aria-label='toggle password visibility'
+                                  onClick={handleClickShowPassword}
                                 >
-                                  {values.showPassword ? <EyeOutline /> : <EyeOffOutline />}
+                                  {passvalues.showPassword ? <EyeOutline /> : <EyeOffOutline />}
                                 </IconButton>
                               </InputAdornment>
-                            }
+                            
+                          }}
                           />
                         </FormControl>
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <FormControl fullWidth>
-                          <InputLabel htmlFor='form-layouts-separator-password-2'>Confirm Password</InputLabel>
-                          <OutlinedInput
+                          <TextField
+                            error={Boolean(touched.password2 && errors.password2)} 
+                            helperText={touched.password2 && errors.password2} 
+                            onBlur={handleBlur} 
+                            onChange={handleChange}
                             value={values.password2}
                             label='Confirm Password'
+                            name="password2"
                             id='form-layouts-separator-password-2'
-                            onChange={handleConfirmChange('password2')}
-                            type={values.showPassword2 ? 'text' : 'password'}
-                            endAdornment={
+                            type={passvalues.showPassword2 ? 'text' : 'password'}
+                            InputProps={{endAdornment:
                               <InputAdornment position='end'>
                                 <IconButton
                                   edge='end'
                                   aria-label='toggle password visibility'
                                   onClick={handleClickShowConfirmPassword}
-                                  onMouseDown={handleMouseDownConfirmPassword}
                                 >
-                                  {values.showPassword2 ? <EyeOutline /> : <EyeOffOutline />}
+                                  {passvalues.showPassword2 ? <EyeOutline /> : <EyeOffOutline />}
                                 </IconButton>
                               </InputAdornment>
-                            }
+                            
+                          }}
                           />
                         </FormControl>
                       </Grid>
@@ -210,34 +262,73 @@ export default function FormLayoutsSeparator (){
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField fullWidth label='Nom des parties' placeholder='Nom des parties' />
+                        <TextField 
+                        error={Boolean(touched.nomPartie && errors.nomPartie)} 
+                        helperText={touched.nomPartie && errors.nomPartie} 
+                        onBlur={handleBlur} 
+                        onChange={handleChange}
+                        value={values.nomPartie}
+                        name="nomPartie"
+                        fullWidth label='Nom des parties' placeholder='Nom des parties' />
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField fullWidth label='Nom du clients' placeholder='Nom du clients' />
+                        <TextField 
+                        error={Boolean(touched.nomClient && errors.nomClient)} 
+                        helperText={touched.nomClient && errors.nomClient} 
+                        onBlur={handleBlur} 
+                        onChange={handleChange}
+                        value={values.nomClient}
+                        name="nomClient"
+                        fullWidth label='Nom du clients' placeholder='Nom du clients' />
                       </Grid>
                       <Grid item xs={12} sm={6}>
-                        <TextField fullWidth label='Nom de la partie adverse' placeholder='Nom de la partie adverse' />
+                        <TextField
+                        error={Boolean(touched.nomPartieAdverse && errors.nomPartieAdverse)} 
+                        helperText={touched.nomPartieAdverse && errors.nomPartieAdverse} 
+                        onBlur={handleBlur} 
+                        onChange={handleChange}
+                        value={values.nomPartieAdverse}
+                        name="nomPartieAdverse" 
+                        fullWidth label='Nom de la partie adverse' placeholder='Nom de la partie adverse' />
                       </Grid>
                       <Grid item xs={12} sm={6}>
                         <DatePicker
                           selected={date}
                           showYearDropdown
                           showMonthDropdown
-                          placeholderText='MM-DD-YYYY'
-                          customInput={<CustomInput />}
+                          dateFormat="dd/MM/yyyy" 
+                          placeholderText='DD-MM-YYYY'
+                          customInput={<CustomInput
+                            error={Boolean(touched.prochainAudience && errors.prochainAudience)} 
+                            helperText={touched.prochainAudience && errors.prochainAudience} 
+                            name="prochainAudience"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                             />}
                           id='form-layouts-separator-date'
-                          onChange={date => setDate(date)}
+                          onChange={(date) => {
+                            setDate(date)
+                            setDateAudience(date.toISOString())
+                            console.log(date.toISOString())
+                            
+                           
+                          }}
                         />
                       </Grid>
-                      
                       <Grid item xs={12} sm={6}>
                         <FormControl fullWidth>
                           <InputLabel id='form-layouts-separator-select-label'>Etat de procedure</InputLabel>
                           <Select
+                          error={Boolean(touched.etatProcedure && errors.etatProcedure)} 
+                          helperText={touched.etatProcedure && errors.etatProcedure} 
+                          onBlur={handleBlur} 
+                          onChange={handleChange}
+                          value={values.etatProcedure}
                             label='Etat de procedure'
                             defaultValue=''
                             id='form-layouts-separator-select'
                             labelId='form-layouts-separator-select-label'
+                            name="etatProcedure"
                           >
                             <MenuItem value='Attente de la convocation'>Attente de la convocation</MenuItem>
                             <MenuItem value='Attente du premier appel de cause
@@ -276,6 +367,12 @@ export default function FormLayoutsSeparator (){
                         <FormControl fullWidth>
                           <InputLabel id='form-layouts-separator-select-label'>Juridiction</InputLabel>
                           <Select
+                          error={Boolean(touched.juridiction && errors.juridiction)} 
+                          helperText={touched.juridiction && errors.juridiction} 
+                          onBlur={handleBlur} 
+                          onChange={handleChange}
+                          value={values.juridiction}
+                            name="juridiction"
                             label='Juridiction'
                             defaultValue=''
                             id='form-layouts-separator-select'
@@ -314,6 +411,7 @@ export default function FormLayoutsSeparator (){
                             <MenuItem value='Inspection du Travail'>Inspection du Travail</MenuItem>
                             <MenuItem value='Autre'>Autre</MenuItem>
                           </Select>
+
                         </FormControl>
                       </Grid>
                       
@@ -321,12 +419,10 @@ export default function FormLayoutsSeparator (){
                   </CardContent>
                   <Divider sx={{ margin: 0 }} />
                   <CardActions>
-                    <Button size='large' type='submit' sx={{ mr: 2 }} variant='contained'>
+                    <Button size='large' disabled={isSubmitting} type='submit' sx={{ mr: 2 }} variant='contained'>
                       Valider
                     </Button>
-                    <Button size='large' color='secondary' variant='outlined'>
-                      Annuler
-                    </Button>
+                   
                   </CardActions>
                 </form>
               )}

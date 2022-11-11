@@ -17,6 +17,7 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
+import moment from 'moment';
 
 
 // ** Icons Imports
@@ -62,12 +63,13 @@ const Row = props => {
           </IconButton>
         </TableCell>
         <TableCell component='th' scope='row'>
-          {row?.name}
+          {row?.nomClient}
         </TableCell>
-        <TableCell align='right'>{row?.calories}</TableCell>
-        <TableCell align='right'>{row?.fat}</TableCell>
-        <TableCell align='right'>{row?.carbs}</TableCell>
-        <TableCell align='right'>{row?.protein}</TableCell>
+        <TableCell align='right'>{row?.nomPartie}</TableCell>
+        <TableCell align='right'>{row?.nomPartieAdverse}</TableCell>
+        <TableCell align='right'>{row?.juridiction}</TableCell>
+        <TableCell align='right'>{row?.etatProcedure}</TableCell>
+        <TableCell align='right'>{moment(row?.dateProchainAudiance).format("DD/MM/YY")}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell colSpan={6} sx={{ py: '0 !important' }}>
@@ -130,6 +132,13 @@ const columns = [
   {
     id: 'density',
     label: 'Etat de la procédure',
+    minWidth: 170,
+    align: 'right',
+    format: value => value.toFixed(2)
+  },
+  {
+    id: 'density',
+    label: 'Prochaine audience',
     minWidth: 170,
     align: 'right',
     format: value => value.toFixed(2)

@@ -58,6 +58,7 @@
     "eslint-plugin-react": "^7.29.4",
     "formik": "^2.2.9",
     "mdi-material-ui": "^7.1.0",
+    "moment": "^2.29.4",
     "next": "^12.3.3",
     "nprogress": "^0.2.0",
     "react": "17.0.2",
