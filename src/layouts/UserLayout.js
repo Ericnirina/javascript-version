@@ -45,6 +45,7 @@ const UserLayout = ({ children }) => {
         />
       )}
     >
+      
       {children}
     </VerticalLayout>
   )
