@@ -23,14 +23,14 @@ import { clients } from 'src/service/clients'
 const MUITable = () => {
   const[dataClients, setDataClients] = useState();
   
-  const createData = (name, calories, fat, carbs, protein, price) => {
+  const createData = (nomClient, nomPartie, nomPartieAdverse, juridiction, etatProcedure, dateProchainAudiance) => {
     return {
-      name,
-      calories,
-      fat,
-      carbs,
-      protein,
-      price,
+      nomClient,
+      nomPartie,
+      nomPartieAdverse,
+      juridiction,
+      etatProcedure,
+      dateProchainAudiance,
       history: [
         {
           date: '2020-01-05',
@@ -61,18 +61,22 @@ const MUITable = () => {
     if(!dataClients){
 
       const res = await clients();
-
+      
       const allclient = res.data.data.map((datas)=>{
+        const date = new Date(datas.attributes.dateProchainAudiance);
+        console.log(date.getFullYear())
+
         return createData(
           datas.attributes.nomClient, 
           datas.attributes.nomPartie, 
           datas.attributes.nomPartieAdverse,
           datas.attributes.juridiction, 
           datas.attributes.etatProcedure,
-          datas.id,)
+          (datas.attributes.dateProchainAudiance),)
 
       })
       setDataClients(allclient);
+      console.log(res)
 
       console.log(allclient)
       console.log(rows)
