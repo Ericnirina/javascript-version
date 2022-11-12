@@ -249,7 +249,6 @@ const TableCollapsible = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {/* {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => ( */}
           { tableData && tableData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
             <Row key={row?.name} row={row} />
           ))}
