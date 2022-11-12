@@ -2,6 +2,7 @@
 import { forwardRef, useState } from 'react'
 
 // ** MUI Imports
+import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
@@ -28,6 +29,10 @@ import DatePicker from 'react-datepicker'
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
 import { createInfo, createUser } from 'src/service/insertion'
+import TabAccount from '../account-settings/TabAccount'
+import { styled } from '@mui/material/styles'
+import { addFile, getFileById } from 'src/service/files'
+
 
 const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth {...props} inputRef={ref} label='Prochain audience' autoComplete='off' />
@@ -39,6 +44,15 @@ export default function FormLayoutsSeparator (){
   const [date, setDate] = useState()
   const [dateAudience, setDateAudience] = useState(date)
   const [passConfirm, setPassConfirm] = useState("none")
+  const [files, setFiles]= useState([])
+  const [listFile, setlistFile] = useState()
+
+  const onChange = async (e) => {
+    const reader = new FileReader()
+    const files = e.target.files
+    console.log(files)
+    setFiles(files)
+  }
 
   const [passvalues, setValues] = useState({
     password: '',
@@ -46,6 +60,23 @@ export default function FormLayoutsSeparator (){
     showPassword: false,
     showPassword2: false
   })
+
+  const ResetButtonStyled = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(4.5),
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      marginLeft: 0,
+      textAlign: 'center',
+      marginTop: theme.spacing(4)
+    }
+  }))
+
+  const ButtonStyled = styled(Button)(({ theme }) => ({
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      textAlign: 'center'
+    }
+  }))
 
   // Handle Password
   const handlePasswordChange = prop => event => {
@@ -76,6 +107,10 @@ export default function FormLayoutsSeparator (){
   // Handle Select
   const handleSelectChange = event => {
     setLanguage(event.target.value)
+  }
+  
+  const handlerReset = () => {
+    setFiles([])
   }
 
   return (
@@ -128,10 +163,12 @@ export default function FormLayoutsSeparator (){
                     try { 
                       
                      
-                      const user = await createUser(values.username,values.email,values.password,values.adresse, values.telephone)
+                      const user = await createUser(values.username,values.email,values.password,values.adresse, values.telephone,"client")
                       console.log(user.user.id)
                       const info = await createInfo(values.nomPartie, values.nomClient, values.nomPartieAdverse, values.juridiction,values.etatProcedure,dateAudience,user.user.id)
-                      console.log(info)
+                      console.log(info.data.id)
+                       const file = await addFile(files, "test",info.data.id)
+                      console.log(file)
                       resetForm(); 
                         setStatus({ success: true }); 
                         setSubmitting(true);
@@ -414,7 +451,35 @@ export default function FormLayoutsSeparator (){
 
                         </FormControl>
                       </Grid>
-                      
+                      <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+                        { files.length !== 0  ? Object.values(files).map( (key, value) => (
+                          // eslint-disable-next-line react/jsx-key
+                          <p> { key.name } </p>
+                        )) : <p>Pas de fichier!</p>}
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}> 
+                        <Box>
+                          <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
+                            Telecharger le fichier
+                            <input
+                              hidden
+                              type='file'
+                              multiple
+                              onChange={onChange}
+                              accept='image/pdf, image/docx'
+                              id='account-settings-upload-image'
+                            />
+                          </ButtonStyled>
+                          <ResetButtonStyled color='error' variant='outlined' onClick={() => handlerReset()}>
+                            Reset
+                          </ResetButtonStyled>
+                          <Typography variant='body2' sx={{ marginTop: 5 }}>
+                            docx, pdf, jpg, png, xlsx, ...
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Grid>
+                          
+                    
                     </Grid>
                   </CardContent>
                   <Divider sx={{ margin: 0 }} />

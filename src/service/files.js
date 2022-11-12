@@ -1,7 +1,8 @@
 import axios from "axios";
+import { Information } from "mdi-material-ui";
 import api from "./API";
 
-export const addFile = async (files, nom) =>{
+export const addFile = async (files, nom,id) =>{
     // console.log(file)
 
     const config = {
@@ -11,16 +12,27 @@ export const addFile = async (files, nom) =>{
     };
 
     const text = {
-        nom : nom
+        nom : nom,
+        information : id,
+        url : "url.url"
+
     }
 
+    const info = {
+        information : id
+    }
+    console.log(id)
     const data = new FormData();
-
+    
     data.append('data',  JSON.stringify(text));
     for (let i = 0; i < files.length; i++) {
         data.append('files.file', files[i]);
     }
-
+    
+    console.log(info)
+    
+    console.log(text)
+    
     // data.append('files.file', file);
 
     // const response = await axios.post('http://localhost:1337/api/fichiers', data, config)

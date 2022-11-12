@@ -1,12 +1,13 @@
 import api from './API'
 
-export const createUser = async (username, email, password, adresse,telephone) =>{
+export const createUser = async (username, email, password, adresse,telephone,access) =>{
     const response = await api.post('/auth/local/register', {
         username: username,
         email: email,
         password: password,
         adresse: adresse,
         telephone: telephone,
+        access:access
       })
     console.log(response.data)
     

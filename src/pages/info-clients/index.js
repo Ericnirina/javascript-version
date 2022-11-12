@@ -10,6 +10,8 @@ import React from 'react'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import TableClient from 'src/views/tables/TableClient'
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { authAtom } from "../../recoil/atom/authAtom";
 
 // service
 import { client, clients } from 'src/service/clients'
@@ -17,7 +19,8 @@ import { client, clients } from 'src/service/clients'
 
 const MUITable = () => {
   const[dataClients, setDataClients] = useState();
-  
+  const { user } = useRecoilValue(authAtom);
+
   const createData = (numeroDossier, nomPartie,juridiction, etatProcedure, dateProchainAudiance) => {
     return {
         numeroDossier,
@@ -53,8 +56,8 @@ const MUITable = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     if(!dataClients){
-
-      const one_res = await client();
+    console.log(user.id)
+      const one_res = await client(user.id);
       console.log(one_res.data.information)
       
       const allclient = one_res.data.information.map((datas)=>{
@@ -71,7 +74,7 @@ const MUITable = () => {
 
 
     } 
-  }, [dataClients, rows])
+  }, [dataClients])
 
   return (
     <Grid container spacing={6}>

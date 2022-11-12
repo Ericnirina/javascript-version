@@ -67,7 +67,8 @@ const TabAccount = () => {
 
   useEffect(async () => {
     if(!listFile){
-      const data = await getFileById(1);
+      const data = await getFileById(3);
+
       console.log(data.attributes.file.data)
       setlistFile(data.attributes.file.data)
     } 
