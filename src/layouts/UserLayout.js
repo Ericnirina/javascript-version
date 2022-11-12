@@ -13,10 +13,17 @@ import VerticalAppBarContent from './components/vertical/AppBarContent'
 
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
+import { useEffect } from 'react'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
+import { authAtom } from 'src/recoil/atom/authAtom'
+import { Router, useRouter } from 'next/router'
 
 const UserLayout = ({ children }) => {
   // ** Hooks
   const { settings, saveSettings } = useSettings()
+  const { user, token } = useRecoilValue(authAtom)
+  const setAuth = useSetRecoilState(authAtom);
+  const router = useRouter();
 
   /**
    *  The below variable will hide the current layout menu at given screen size.
@@ -27,6 +34,13 @@ const UserLayout = ({ children }) => {
    *  ! Do not change this value unless you know what you are doing. It can break the template.
    */
   const hidden = useMediaQuery(theme => theme.breakpoints.down('lg'))
+
+  useEffect(() => {
+    if (!token || !user) {
+      setAuth({ token: null, user: null });
+      router.push('/')
+    }
+  }, [user, token, setAuth, router])
 
   return (
     <VerticalLayout
@@ -45,6 +59,7 @@ const UserLayout = ({ children }) => {
         />
       )}
     >
+      
       {children}
     </VerticalLayout>
   )
