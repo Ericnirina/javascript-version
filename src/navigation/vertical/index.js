@@ -27,7 +27,7 @@ const navigation = () => {
     },
     {
       title: 'Listes des Affaires',
-      path: '/icons',
+      path: '/info-clients',
       icon: GoogleCirclesExtended
     },
   ]

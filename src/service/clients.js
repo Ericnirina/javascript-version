@@ -6,3 +6,10 @@ export const clients = async () =>{
 return response;
     
 }
+
+export const client = async () =>{
+    const response = await api.get('users/12?populate=*&pagination[pageSize]=1000')
+    
+return response;
+    
+}
