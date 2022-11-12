@@ -1,6 +1,7 @@
 // ** Next Imports
 import Head from 'next/head'
 import { Router, useRouter } from 'next/router'
+import { RecoilRoot } from "recoil"
 
 // ** Loader Import
 import NProgress from 'nprogress'
@@ -26,6 +27,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css'
 
 // ** Global css styles
 import '../../styles/globals.css'
+import { tokenContext, userContext } from 'src/@core/context/authsContext'
+import { useState } from 'react'
 
 const clientSideEmotionCache = createEmotionCache()
 
@@ -46,6 +49,7 @@ if (themeConfig.routingLoader) {
 const App = props => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
   const router = useRouter()
+  const [auth, setAuth] = useState()
 
   // Variables
   const getLayout = Component.getLayout ?? (page => <UserLayout>{page}</UserLayout>)
@@ -62,6 +66,7 @@ const App = props => {
         <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>
+      <RecoilRoot>
       {
         router.pathname == "/" || router.pathname == "/pages/login" ?
         <SettingsProvider>
@@ -80,6 +85,7 @@ const App = props => {
           </SettingsConsumer>
         </SettingsProvider>
       }
+    </RecoilRoot>
     </CacheProvider>
   )
 }

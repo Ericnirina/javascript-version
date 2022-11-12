@@ -9,20 +9,19 @@ const initialAuth = {
 }
 
 // ** Create Context
-export const AuthContext = createContext({
-  saveAuth: () => null,
-  auth: initialAuth
-})
+export const tokenContext = createContext()
 
-export const SettingsProvider = ({ children }) => {
-  // ** State
-  const [auth, setAuth] = useState({ ...initialSettings })
+export const userContext = createContext()
 
-  const saveAuth = updatedAuth => {
-    setAuth(updatedAuth)
-  }
+// export const AuthProvider = ({ children }) => {
+//   // ** State
+//   const [auth, setAuth] = useState({ ...initialSettings })
 
-  return <AuthContext.Provider value={{ auth, saveAuth }}>{children}</AuthContext.Provider>
-}
+//   const saveAuth = updatedAuth => {
+//     setAuth(updatedAuth)
+//   }
 
-export const AuthConsumer = AuthContext.Consumer
+//   return <AuthContext.Provider value={{ auth, saveAuth }}>{children}</AuthContext.Provider>
+// }
+
+// export const AuthConsumer = AuthContext.Consumer
