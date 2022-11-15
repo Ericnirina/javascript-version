@@ -30,6 +30,11 @@ const navigation = () => {
       path: '/info-clients',
       icon: GoogleCirclesExtended
     },
+    {
+      title: 'Ajout information',
+      path: '/info-add',
+      icon: GoogleCirclesExtended
+    },
   ]
 }
 

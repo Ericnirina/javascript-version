@@ -10,10 +10,14 @@ import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { authAtom } from 'src/recoil/atom/authAtom'
 
 // ** Icons Imports
 import { addFile, getFileById } from 'src/service/files'
 import { useEffect } from 'react'
+import { client } from 'src/service/clients'
+import { informations } from 'src/service/information'
 
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 120,
@@ -44,6 +48,7 @@ const TabAccount = () => {
   const [openAlert, setOpenAlert] = useState(true)
   const [files, setFiles]= useState([])
   const [listFile, setlistFile] = useState()
+  const { user } = useRecoilValue(authAtom);
 
   const onChange = async (e) => {
     const reader = new FileReader()
@@ -67,7 +72,18 @@ const TabAccount = () => {
 
   useEffect(async () => {
     if(!listFile){
-      const data = await getFileById(3);
+
+      //const cli = await client()
+      console.log(user.id)
+      const cli = await client(user.id)
+      console.log(cli.data.information)
+      const id_info = cli.data.information.map((row)=>row.id)
+      console.log(id_info)
+      id_info.map(async(info)=>{
+       const information =  await informations(info)
+       console.log(information.data.data.attributes)
+      })
+      const data = await getFileById(9);
 
       console.log(data.attributes.file.data)
       setlistFile(data.attributes.file.data)

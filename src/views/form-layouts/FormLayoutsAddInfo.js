@@ -1,5 +1,6 @@
 // ** React Imports
-import { forwardRef, useState } from 'react'
+import { forwardRef, useState,useEffect } from 'react'
+import PropTypes from "prop-types";
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -29,24 +30,33 @@ import DatePicker from 'react-datepicker'
 import EyeOutline from 'mdi-material-ui/EyeOutline'
 import EyeOffOutline from 'mdi-material-ui/EyeOffOutline'
 import { createInfo, createUser } from 'src/service/insertion'
-import TabAccount from '../account-settings/TabAccount'
 import { styled } from '@mui/material/styles'
 import { addFile, getFileById } from 'src/service/files'
-import { addNumDossier } from 'src/service/addNumDossier'
-
+import Autocomplete from '@mui/material/Autocomplete';
+import { addNumDossier } from 'src/service/addNumDossier';
 
 const CustomInput = forwardRef((props, ref) => {
   return <TextField fullWidth {...props} inputRef={ref} label='Prochain audience' autoComplete='off' />
 })
 
-export default function FormLayoutsSeparator (){
+export default function FormLayoutsAddInfo (props){
+
   // ** States
   const [language, setLanguage] = useState([])
   const [date, setDate] = useState()
+  const [selectUser, setSelectUser] = useState()
+  const [userID, setUserID] = useState()
   const [dateAudience, setDateAudience] = useState(date)
-  const [passConfirm, setPassConfirm] = useState("none")
   const [files, setFiles]= useState([])
   const [listFile, setlistFile] = useState()
+  const  { tableData } = props;
+
+  const userChange = (e,) => {
+        setSelectUser(e.target.value.username)
+        setUserID(e.target.value.id)
+        console.log(e.target.value.username)
+        console.log(e.target.value.id)
+  }
 
   const onChange = async (e) => {
     const reader = new FileReader()
@@ -55,12 +65,7 @@ export default function FormLayoutsSeparator (){
     setFiles(files)
   }
 
-  const [passvalues, setValues] = useState({
-    password: '',
-    password2: '',
-    showPassword: false,
-    showPassword2: false
-  })
+  
 
   const ResetButtonStyled = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(4.5),
@@ -79,80 +84,42 @@ export default function FormLayoutsSeparator (){
     }
   }))
 
-  // Handle Password
-  const handlePasswordChange = prop => event => {
-    setValues({ ...passvalues, [prop]: event.target.value })
-  }
-
-  const handleClickShowPassword = () => {
-    setValues({ ...passvalues, showPassword: !passvalues.showPassword })
-  }
-
-  const handleMouseDownPassword = event => {
-    event.preventDefault()
-  }
-
-  // Handle Confirm Password
-  const handleConfirmChange = prop => event => {
-    setValues({ ...passvalues, [prop]: event.target.value })
-  }
-
-  const handleClickShowConfirmPassword = () => {
-    setValues({ ...passvalues, showPassword2: !passvalues.showPassword2 })
-  }
-
-  const handleMouseDownConfirmPassword = event => {
-    event.preventDefault()
-  }
-
-  // Handle Select
-  const handleSelectChange = event => {
-    setLanguage(event.target.value)
-  }
+  
   
   const handlerReset = () => {
     setFiles([])
   }
 
+
+
+ 
+
+
   return (
     <Card>
-      <CardHeader title='Insertion' titleTypographyProps={{ variant: 'h6' }} />
+      <CardHeader title='Ajout information' titleTypographyProps={{ variant: 'h6' }} />
       <Divider sx={{ margin: 0 }} />
       <Formik
                 
                 enableReinitialize 
                 initialValues={{
-                  username: '',
-                  email: '', 
-                  adresse: '', 
-                  telephone: '', 
-                  password: '' ,
-                  password2:'',
+                
                   nomPartie:'',                
                   nomClient:'',                
                   etatProcedure:'',                
                   nomPartieAdverse:'',                
                   prochainAudience:'',                
-                  juridiction:'',                
+                  juridiction:'',
+                  utilisateur:''                
                 }} 
                 validationSchema={Yup.object().shape({ 
-                  username: Yup.string().required('Merci de renseigner votre username').min(6, '+ de 6 caractères'),
-                  adresse: Yup.string().required('Merci de renseigner votre adresse'),
-                  telephone: Yup.string().required('Merci de renseigner votre telephone'),
                   nomClient: Yup.string().required('Merci de renseigner ce champs'),
                   nomPartie: Yup.string().required('Merci de renseigner ce champs'),
                   nomPartieAdverse: Yup.string().required('Merci de renseigner ce champs'),
                   etatProcedure: Yup.string().required('Merci de renseigner ce champs'),
                   juridiction: Yup.string().required('Merci de renseigner ce champs'),
-                  email: Yup.string().email('Merci de corriger votre Email').required('Merci de renseigner votre Email'), 
-                  password: Yup.string().min(6, 'Your password must contain between 6 and 60 characters.').max(60, 'Your password must contain between 6 and 60 characters.').required('Merci de renseigner votre mot de passe'), 
-                  password2: Yup.string().when("password", {
-                      is: val => (val && val.length > 0 ? true : false),
-                      then: Yup.string().oneOf(
-                      [Yup.ref("password")],
-                      "Vérifier le mot de passe"
-                      )
-                  }) 
+                  
+                  
                   
                 })} 
                 onSubmit={async (values, { 
@@ -164,16 +131,14 @@ export default function FormLayoutsSeparator (){
                     try { 
                       
                      
-                      const user = await createUser(values.username,values.email,values.password,values.adresse, values.telephone,"client")
-                      console.log(user.user.id)
-                      const info = await createInfo(values.nomPartie, values.nomClient, values.nomPartieAdverse, values.juridiction,values.etatProcedure,dateAudience,user.user.id)
-                      console.log(info.data.id)
-                      const numDoss = info.data.id + 300
+                        const info = await createInfo(values.nomPartie, values.nomClient, values.nomPartieAdverse, values.juridiction,values.etatProcedure,dateAudience,userID)
+                        console.log(info.data.id)
+                        const numDoss = info.data.id + 300
                         const update_dossier = await addNumDossier(numDoss,info.data.id)
                         console.log(update_dossier)
-                       const file = await addFile(files, "test",info.data.id)
-                      console.log(file)
-                      resetForm(); 
+                        const file = await addFile(files, "test",info.data.id)
+                        console.log(file)
+                        resetForm(); 
                         setStatus({ success: true }); 
                         setSubmitting(true);
                       
@@ -201,102 +166,34 @@ export default function FormLayoutsSeparator (){
                     <Grid container spacing={5}>
                       <Grid item xs={12}>
                         <Typography variant='body2' sx={{ fontWeight: 600 }}>
-                          1. Compte Client
+                          1. Utilisateur
                         </Typography>
                       </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField 
-                        error={Boolean(touched.username && errors.username)} 
-                        helperText={touched.username && errors.username} 
-                        onBlur={handleBlur} 
-                        onChange={handleChange} 
-                        value={values.username}
-                        fullWidth label='Username' placeholder='Username' name='username' />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField 
-                        error={Boolean(touched.email && errors.email)} 
-                        helperText={touched.email && errors.email} 
-                        onBlur={handleBlur} 
-                        onChange={handleChange} 
-                        value={values.email}
-                        fullWidth type='email' label='Email' placeholder='Email' name='email' />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField 
-                         error={Boolean(touched.adresse && errors.adresse)} 
-                         helperText={touched.adresse && errors.adresse} 
-                         onBlur={handleBlur} 
-                         onChange={handleChange} 
-                         value={values.adresse}
-                        fullWidth label='Adresse' placeholder='Adresse' name='adresse'  />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField 
-                        error={Boolean(touched.telephone && errors.telephone)} 
-                        helperText={touched.telephone && errors.telephone} 
-                        onBlur={handleBlur} 
-                        onChange={handleChange} 
-                        value={values.telephone}
-                        fullWidth label='Telephone' placeholder='Telephone' name='telephone' />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                      <FormControl fullWidth>
-                          <TextField
-                            error={Boolean(touched.password && errors.password)} 
-                            helperText={touched.password && errors.password} 
-                            onBlur={handleBlur} 
-                            onChange={handleChange}
-                            value={values.password}
-                            label='Password'
-                            name="password"
-                            id='form-layouts-separator-password-2'
-                            type={passvalues.showPassword ? 'text' : 'password'}
-                            InputProps={{endAdornment:
-                              <InputAdornment position='end'>
-                                <IconButton
-                                  edge='end'
-                                  aria-label='toggle password visibility'
-                                  onClick={handleClickShowPassword}
-                                >
-                                  {passvalues.showPassword ? <EyeOutline /> : <EyeOffOutline />}
-                                </IconButton>
-                              </InputAdornment>
-                            
-                          }}
-                          />
-                        </FormControl>
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControl fullWidth>
-                          <TextField
-                            error={Boolean(touched.password2 && errors.password2)} 
-                            helperText={touched.password2 && errors.password2} 
-                            onBlur={handleBlur} 
-                            onChange={handleChange}
-                            value={values.password2}
-                            label='Confirm Password'
-                            name="password2"
-                            id='form-layouts-separator-password-2'
-                            type={passvalues.showPassword2 ? 'text' : 'password'}
-                            InputProps={{endAdornment:
-                              <InputAdornment position='end'>
-                                <IconButton
-                                  edge='end'
-                                  aria-label='toggle password visibility'
-                                  onClick={handleClickShowConfirmPassword}
-                                >
-                                  {passvalues.showPassword2 ? <EyeOutline /> : <EyeOffOutline />}
-                                </IconButton>
-                              </InputAdornment>
-                            
-                          }}
-                          />
-                        </FormControl>
-                      </Grid>
                       <Grid item xs={12}>
-                        <Divider sx={{ marginBottom: 0 }} />
+                      <FormControl fullWidth>
+                          <InputLabel id='form-layouts-separator-select-label'>Utilisateur</InputLabel>
+                          <Select
+                          error={Boolean(touched.utilisateur && errors.utilisateur)} 
+                          helperText={touched.utilisateur && errors.utilisateur} 
+                          onBlur={handleBlur} 
+                          onChange={userChange}
+                          value={selectUser}
+                            label='Utilisateur'
+                            defaultValue=''
+                            id='form-layouts-separator-select'
+                            labelId='form-layouts-separator-select-label'
+                            name="utilisateur"
+                          >
+                            {tableData && tableData.map((user) => (
+                                <MenuItem  key={user.id} value={user}>
+                                {user.username}
+                                </MenuItem>
+                            ))}
+                                  
+                          </Select>
+                        </FormControl>
                       </Grid>
+                      <Divider sx={{ margin: 0 }} />
                       <Grid item xs={12}>
                         <Typography variant='body2' sx={{ fontWeight: 600 }}>
                           2. Information
@@ -450,6 +347,16 @@ export default function FormLayoutsSeparator (){
 
                         </FormControl>
                       </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant='body2' sx={{ fontWeight: 600 }}>
+                          2. Ajout fichiers
+                        </Typography>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Divider sx={{ marginBottom: 0 }} />
+                      </Grid>
+                     
+
                       <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
                         { files.length !== 0  ? Object.values(files).map( (key, value) => (
                           // eslint-disable-next-line react/jsx-key
@@ -477,9 +384,10 @@ export default function FormLayoutsSeparator (){
                         </Box>
                       </Box>
                     </Grid>
-                          
+                        
                     
                     </Grid>
+                   
                   </CardContent>
                   <Divider sx={{ margin: 0 }} />
                   <CardActions>
@@ -491,8 +399,14 @@ export default function FormLayoutsSeparator (){
                 </form>
               )}
               </Formik>
+              
     </Card>
   )
 }
+
+CustomInput.propTypes = {
+  
+    TableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  };
 
 

@@ -18,7 +18,8 @@ import IconButton from '@mui/material/IconButton'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 import moment from 'moment';
-
+import { informations } from 'src/service/information';
+import { getFileById } from 'src/service/files';
 
 // ** Icons Imports
 import ChevronUp from 'mdi-material-ui/ChevronUp'
@@ -50,6 +51,7 @@ const createData = (name, calories, fat, carbs, protein, price) => {
 const Row = props => {
   // ** Props
   const { row } = props
+  const [listFile, setlistFile] = useState([])
 
   // ** State
   const [open, setOpen] = useState(false)
@@ -58,7 +60,24 @@ const Row = props => {
     <Fragment>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
-          <IconButton aria-label='expand row' size='small' onClick={() => setOpen(!open)}>
+          <IconButton aria-label='expand row' size='small' onClick={async() => {
+            setOpen(!open)
+            const info = await informations(row.id)
+            const file = info.data.data.attributes.fichiers.data
+            const id_file = file.map((row)=>row.id)
+            console.log(id_file)
+
+            let datas = id_file.map(async (row)=>{
+              let data = []
+              data = await getFileById(row)
+              
+              return data
+            })
+            console.log("is",datas)
+
+            // setlistFile(data.attributes.file.data)
+            
+            }}>
             {open ? <ChevronUp /> : <ChevronDown />}
           </IconButton>
         </TableCell>
@@ -72,7 +91,7 @@ const Row = props => {
       </TableRow>
       <TableRow>
         <TableCell colSpan={6} sx={{ py: '0 !important' }}>
-          <Collapse in={open} timeout='auto' unmountOnExit>
+          <Collapse in={open} timeout='auto' unmountOnExit >
             <Box sx={{ m: 2 }}>
               <Typography variant='h6' gutterBottom component='div'>
                 Details
@@ -82,8 +101,6 @@ const Row = props => {
                   <TableRow>
                     <TableCell>Date de la prochaine audiance</TableCell>
                     <TableCell>Observation</TableCell>
-                    {/* <TableCell align='right'>Amount</TableCell>
-                    <TableCell align='right'>Total price ($)</TableCell> */}
                   </TableRow>
                 </TableHead>
                 <TableBody>
