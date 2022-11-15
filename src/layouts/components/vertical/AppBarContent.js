@@ -1,9 +1,7 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Icons Imports
 import Menu from 'mdi-material-ui/Menu'

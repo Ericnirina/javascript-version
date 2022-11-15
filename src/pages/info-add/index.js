@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // ** MUI Imports
 import { forwardRef, useState,useEffect } from 'react'
 import Grid from '@mui/material/Grid'
@@ -18,11 +19,11 @@ const AddUSer = () => {
 
     useEffect(async () => {
         if (!allUSer) {
-          const res = await allUser()
-          console.log(res.data)
-          setAllUSer(res.data)
+            const res = await allUser()
+            console.log(res.data)
+            setAllUSer(res.data)
         }
-      }, [allUSer])
+    }, [allUSer])
 
   return (
     <DatePickerWrapper>

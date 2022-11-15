@@ -40,6 +40,12 @@ const UserLayout = ({ children }) => {
       setAuth({ token: null, user: null });
       router.push('/')
     }
+    else if (user){
+      if(user.access != 'juge'){
+        setAuth({ token: null, user: null });
+        router.push('/')
+      }
+    }
   }, [user, token, setAuth, router])
 
   return (

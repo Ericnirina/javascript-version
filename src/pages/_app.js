@@ -68,7 +68,7 @@ const App = props => {
       </Head>
       <RecoilRoot>
       {
-        router.pathname == "/" || router.pathname == "/pages/login" ?
+        router.pathname == "/" || router.pathname == "/pages/login" || router.pathname == "/info-clients" ?
         <SettingsProvider>
           <SettingsConsumer>
             {({ settings }) => {

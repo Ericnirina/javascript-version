@@ -131,7 +131,7 @@ const LoginPage = () => {
                     console.log(userRecoil)
                     if(userRecoil.data){
 
-                        // if(userRecoil.data.user.access == "user"){
+                        if(userRecoil.data.user.access == "juge"){
                             setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
                             console.log(userRecoil.data.jwt)
                             resetForm();
@@ -139,14 +139,14 @@ const LoginPage = () => {
                             setSubmitting(false);
                             Router.push("/form-layouts");
 
-                        // }
-                        // if(userRecoil.data.user.access == "Admin"){
-                        //     setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
-                        //     resetForm();
-                        //     setStatus({ success: true }); 
-                        //     setSubmitting(false);
-                        //     Router.push("/superAdmin/tableau");
-                        // }
+                        }
+                        if(userRecoil.data.user.access == "client"){
+                            setAuth({ token: userRecoil.data.jwt, user: userRecoil.data.user  });
+                            resetForm();
+                            setStatus({ success: true }); 
+                            setSubmitting(false);
+                            Router.push("/info-clients");
+                        }
                     }
                     if(userRecoil.message == "Request failed with status code 400"){
                         toast.error(userRecoil.response.data.error.message);
