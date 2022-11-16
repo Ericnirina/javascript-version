@@ -23,8 +23,9 @@ import { clients } from 'src/service/clients'
 const MUITable = () => {
   const[dataClients, setDataClients] = useState();
   
-  const createData = (nomClient, nomPartie, nomPartieAdverse, juridiction, etatProcedure, dateProchainAudiance) => {
+  const createData = (id,nomClient, nomPartie, nomPartieAdverse, juridiction, etatProcedure, dateProchainAudiance) => {
     return {
+      id,
       nomClient,
       nomPartie,
       nomPartieAdverse,
@@ -61,12 +62,13 @@ const MUITable = () => {
     if(!dataClients){
 
       const res = await clients();
-      
+
       const allclient = res.data.data.map((datas)=>{
         const date = new Date(datas.attributes.dateProchainAudiance);
         console.log(date.getFullYear())
 
         return createData(
+          datas.id, 
           datas.attributes.nomClient, 
           datas.attributes.nomPartie, 
           datas.attributes.nomPartieAdverse,
@@ -89,10 +91,10 @@ const MUITable = () => {
       <Grid item xs={12}>
         <Typography variant='h5'>
           <Link href='https://mui.com/components/tables/' target='_blank'>
-            Listes
+            Listes de toutes les informations
           </Link>
         </Typography>
-        <Typography variant='body2'>Tables display sets of data. They can be fully customized</Typography>
+        <Typography variant='body2'>Vous pouvez vérifier toutes les informations ou ajouter des fichiers</Typography>
       </Grid>
       {/* <Grid item xs={12}>
         <Card>

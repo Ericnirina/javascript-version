@@ -18,11 +18,21 @@ import IconButton from '@mui/material/IconButton'
 import TableContainer from '@mui/material/TableContainer'
 import TablePagination from '@mui/material/TablePagination'
 import moment from 'moment';
-
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 // ** Icons Imports
 import ChevronUp from 'mdi-material-ui/ChevronUp'
 import ChevronDown from 'mdi-material-ui/ChevronDown'
+import { informations } from 'src/service/information';
+import { addFile, getFileById } from 'src/service/files';
+import { styled } from '@mui/material/styles'
 
 const createData = (name, calories, fat, carbs, protein, price) => {
   return {
@@ -53,12 +63,67 @@ const Row = props => {
 
   // ** State
   const [open, setOpen] = useState(false)
+  const [listFile, setlistFile] = useState([])
+  const [openM, setOpenM] = useState(false);
+  const [files, setFiles]= useState([])
+
+  const onChange = async (e) => {
+    const reader = new FileReader()
+    const files = e.target.files
+    console.log(files)
+    setFiles(files)
+  }
+
+  const handleClickOpen = () => {
+    setOpenM(true);
+  };
+
+  const handleClose = () => {
+    setOpenM(false);
+  };
+
+  const ResetButtonStyled = styled(Button)(({ theme }) => ({
+    marginLeft: theme.spacing(4.5),
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      marginLeft: 0,
+      textAlign: 'center',
+      marginTop: theme.spacing(4)
+    }
+  }))
+
+  const ButtonStyled = styled(Button)(({ theme }) => ({
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      textAlign: 'center'
+    }
+  }))
+
+  const handlerReset = () => {
+    setFiles([])
+  }
 
   return (
     <Fragment>
+      
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
-          <IconButton aria-label='expand row' size='small' onClick={() => setOpen(!open)}>
+          <IconButton aria-label='expand row' size='small' onClick={async() => {
+            setOpen(!open)
+            const info = await informations(row.id)
+            const file = info.data.data.attributes.fichiers.data
+            console.log(file)
+            
+            const id_file = file.map((row)=>row.id)
+            console.log(id_file)
+            id_file.map(async (row)=>{
+              const data = await getFileById(row)
+              if(listFile.length === 0)
+              setlistFile(current => [...current, data.attributes.file.data])
+              
+            })
+            
+            }}>
             {open ? <ChevronUp /> : <ChevronDown />}
           </IconButton>
         </TableCell>
@@ -74,29 +139,84 @@ const Row = props => {
       <TableRow>
         <TableCell colSpan={6} sx={{ py: '0 !important' }}>
           <Collapse in={open} timeout='auto' unmountOnExit>
-            <Box sx={{ m: 2 }}>
+          <Box sx={{ m: 2 }}>
               <Typography variant='h6' gutterBottom component='div'>
-                Details
+                Fichiers
               </Typography>
               <Table size='small' aria-label='purchases'>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date de la prochaine audiance</TableCell>
-                    <TableCell>Observation</TableCell>
-                    {/* <TableCell align='right'>Amount</TableCell>
-                    <TableCell align='right'>Total price ($)</TableCell> */}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row?.history.map(historyRow => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component='th' scope='row'>
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+               
+                <Grid item xs={12} container spacing={2}>
+                  { listFile && Object.values(listFile).map((value) => (
+                      value.map((file) =>(
+                        // eslint-disable-next-line react/jsx-key
+                          <Grid item sm={4} xs={12}>
+                            <a href={`${process.env.API_URL}${file.attributes.url}`} target='_blank' rel="noreferrer" style={{ textDecoration: "none"}}>
+                              <Button 
+                                variant='outlined' 
+                                sx={{ marginRight: 3.5 }} 
+                                style={{
+                                  borderRadius: "70px",
+                                  fontWeight: "200"
+                              }}>
+                                {file.attributes.name}
+                              </Button>
+                            </a>
+                          </Grid>
+                      ))))}
+                      
+                </Grid>
+                <br/>
+                <div>
+                  <Button variant="outlined" onClick={handleClickOpen}>
+                    Ajouter
+                  </Button>
+                  <Dialog open={openM} onClose={handleClose}>
+                    <DialogTitle>Ajout de fichier</DialogTitle>
+                    <DialogContent>
+                      <DialogContentText>
+                       Ici, vous pouvez ajouter des fichiers
+                      </DialogContentText>
+                      
+                      <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+                        { files.length !== 0  ? Object.values(files).map( (key, value) => (
+                          // eslint-disable-next-line react/jsx-key
+                          <p> { key.name } </p>
+                        )) : <p>Pas de fichier!</p>}
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}> 
+                        <Box>
+                          <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
+                            Telecharger le fichier
+                            <input
+                              hidden
+                              type='file'
+                              multiple
+                              onChange={onChange}
+                              accept='image/pdf, image/docx'
+                              id='account-settings-upload-image'
+                            />
+                          </ButtonStyled>
+                          <ResetButtonStyled color='error' variant='outlined' onClick={() => handlerReset()}>
+                            Reset
+                          </ResetButtonStyled>
+                          <Typography variant='body2' sx={{ marginTop: 5 }}>
+                            docx, pdf, jpg, png, xlsx, ...
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Grid>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose}>Cancel</Button>
+                      <Button onClick={async()=>{
+                        
+                        const added = await addFile(files,"ajout admin", row.id)
+                        console.log(added)
+                        handleClose()
+                        window.location.reload();
+                      }}>Valider</Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
               </Table>
             </Box>
           </Collapse>

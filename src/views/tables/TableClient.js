@@ -20,33 +20,13 @@ import TablePagination from '@mui/material/TablePagination'
 import moment from 'moment';
 import { informations } from 'src/service/information';
 import { getFileById } from 'src/service/files';
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
 
 // ** Icons Imports
 import ChevronUp from 'mdi-material-ui/ChevronUp'
 import ChevronDown from 'mdi-material-ui/ChevronDown'
 
-const createData = (name, calories, fat, carbs, protein, price) => {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-    price,
-    history: [
-      {
-        date: '2020-01-05',
-        customerId: '11091700',
-        amount: 3
-      },
-      {
-        date: '2020-01-02',
-        customerId: 'Anonymous',
-        amount: 1
-      }
-    ]
-  }
-}
 
 const Row = props => {
   // ** Props
@@ -64,18 +44,17 @@ const Row = props => {
             setOpen(!open)
             const info = await informations(row.id)
             const file = info.data.data.attributes.fichiers.data
+            console.log(file)
+            
             const id_file = file.map((row)=>row.id)
             console.log(id_file)
-
-            let datas = id_file.map(async (row)=>{
-              let data = []
-              data = await getFileById(row)
+            id_file.map(async (row)=>{
+              const data = await getFileById(row)
+              if(listFile.length === 0)
+              setlistFile(current => [...current, data.attributes.file.data])
               
-              return data
             })
-            console.log("is",datas)
 
-            // setlistFile(data.attributes.file.data)
             
             }}>
             {open ? <ChevronUp /> : <ChevronDown />}
@@ -94,25 +73,31 @@ const Row = props => {
           <Collapse in={open} timeout='auto' unmountOnExit >
             <Box sx={{ m: 2 }}>
               <Typography variant='h6' gutterBottom component='div'>
-                Details
+                Fichiers
               </Typography>
               <Table size='small' aria-label='purchases'>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Date de la prochaine audiance</TableCell>
-                    <TableCell>Observation</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row?.history.map(historyRow => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component='th' scope='row'>
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
+               
+                <Grid item xs={12} container spacing={2}>
+                  { listFile && Object.values(listFile).map((value) => (
+                      value.map((file) =>(
+                        // eslint-disable-next-line react/jsx-key
+                          <Grid item sm={4} xs={12}>
+                            <a href={`${process.env.API_URL}${file.attributes.url}`} target='_blank' rel="noreferrer" style={{ textDecoration: "none"}}>
+                              <Button 
+                                variant='outlined' 
+                                sx={{ marginRight: 3.5 }} 
+                                style={{
+                                  borderRadius: "70px",
+                                  fontWeight: "200"
+                              }}>
+                                {file.attributes.name}
+                              </Button>
+                            </a>
+                          </Grid>
+                      ))))}
+                      
+                </Grid>
+                
               </Table>
             </Box>
           </Collapse>

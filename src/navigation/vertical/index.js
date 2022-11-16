@@ -21,15 +21,11 @@ const navigation = () => {
       path: '/form-layouts'
     },
     {
-      title: 'Utilisateurs',
+      title: 'Toutes les informations',
       path: '/tables',
       icon: GoogleCirclesExtended
     },
-    {
-      title: 'Listes des Affaires',
-      path: '/info-clients',
-      icon: GoogleCirclesExtended
-    },
+    
     {
       title: 'Ajout information',
       path: '/info-add',
