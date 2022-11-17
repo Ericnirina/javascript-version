@@ -118,7 +118,6 @@ const Row = props => {
     },
     button: {
       width: 200,
-      maxWidth: 700,
       fontSize: "0.7rem",
   
       "& .MuiButton-label": {
@@ -159,6 +158,9 @@ const Row = props => {
           </IconButton>
         </TableCell>
         <TableCell component='th' scope='row'>
+          {row?.numeroDossier}
+        </TableCell>
+        <TableCell component='th' scope='row'>
           {row?.nomClient}
         </TableCell>
         <TableCell align='right'>{row?.nomPartie}</TableCell>
@@ -176,7 +178,7 @@ const Row = props => {
               </Typography>
               <Table size='small' aria-label='purchases'>
                
-                <Grid item xs={12} container spacing={2}>
+                <Grid item xs={12} container spacing={4}>
                   { listFile && (listFile).map((value) => (
                       console.log(value),
                       value.attributes.file.data.map((file) =>(
@@ -399,17 +401,12 @@ const TableCollapsible = (props) => {
         <TableHead>
           <TableRow>
           <TableCell />
+          <TableCell>N° Dossier</TableCell>
           {columns.map(column => (
                 <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
                   {column.label}
                 </TableCell>
               ))}
-            {/* <TableCell />
-            <TableCell>Nom du clients</TableCell>
-            <TableCell align='right'>Nom des parties</TableCell>
-            <TableCell align='right'>Nom de la partie adverse</TableCell>
-            <TableCell align='right'>Juridiction</TableCell>
-            <TableCell align='right'>Etat de la procédure</TableCell> */}
           </TableRow>
         </TableHead>
         <TableBody>
