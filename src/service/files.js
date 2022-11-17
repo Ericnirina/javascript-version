@@ -73,3 +73,10 @@ export const getFileById = async (FileId) =>{
     
 return response.data.data
 }
+
+export const deleteFileById = async (FileId) =>{
+    const response = await api.delete(`/fichiers/${FileId}`)
+    
+return response
+}
+

@@ -2,6 +2,8 @@
 // ** React Imports
 import { useState, Fragment, useEffect } from 'react'
 import PropTypes from "prop-types";
+import ButtonGroup from '@mui/material/ButtonGroup';
+import { makeStyles } from '@mui/styles';
 
 // ** MUI Imports
 import React from 'react'
@@ -31,7 +33,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import ChevronUp from 'mdi-material-ui/ChevronUp'
 import ChevronDown from 'mdi-material-ui/ChevronDown'
 import { informations } from 'src/service/information';
-import { addFile, getFileById } from 'src/service/files';
+import { addFile, deleteFileById, getFileById } from 'src/service/files';
 import { styled } from '@mui/material/styles'
 
 const createData = (name, calories, fat, carbs, protein, price) => {
@@ -103,6 +105,33 @@ const Row = props => {
     setFiles([])
   }
 
+  const useStyles = makeStyles((theme) => ({
+    box: {
+      flex: "1 1 100%",
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "center",
+      alignItems: "center",
+      overflowX: "hidden" // <--- This is new
+      // maxWidth: "100%",
+      // width: "100%"
+    },
+    button: {
+      width: 200,
+      maxWidth: 700,
+      fontSize: "0.7rem",
+  
+      "& .MuiButton-label": {
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textAlign: "left",
+        display: "block"
+      }
+    }
+  }));
+  const classes = useStyles();
+
   return (
     <Fragment>
       
@@ -118,8 +147,10 @@ const Row = props => {
             console.log(id_file)
             id_file.map(async (row)=>{
               const data = await getFileById(row)
+              console.log(data)
+
               if(listFile.length === 0)
-              setlistFile(current => [...current, data.attributes.file.data])
+              setlistFile(current => [...current, data])
               
             })
             
@@ -146,28 +177,40 @@ const Row = props => {
               <Table size='small' aria-label='purchases'>
                
                 <Grid item xs={12} container spacing={2}>
-                  { listFile && Object.values(listFile).map((value) => (
-                      value.map((file) =>(
+                  { listFile && (listFile).map((value) => (
+                      console.log(value),
+                      value.attributes.file.data.map((file) =>(
                         // eslint-disable-next-line react/jsx-key
                           <Grid item sm={4} xs={12}>
                             <a href={`${process.env.API_URL}${file.attributes.url}`} target='_blank' rel="noreferrer" style={{ textDecoration: "none"}}>
-                              <Button 
-                                variant='outlined' 
-                                sx={{ marginRight: 3.5 }} 
-                                style={{
-                                  borderRadius: "70px",
-                                  fontWeight: "200"
-                              }}>
-                                {file.attributes.name}
-                              </Button>
+                              <ButtonGroup>
+
+                                <Button className={classes.button}
+                                  variant='outlined' 
+                                 
+                                >
+                                  {
+                                  (file.attributes.name).length<20 ? file.attributes.name : (file.attributes.name).slice(0,19)+"..."
+                                  }
+                                </Button>
+                                  <Button onClick={async (e)=>{
+                                    e.preventDefault()
+                                    const del = await deleteFileById(value.id)
+                                    console.log(del)
+                                    window.location.reload()
+                                    
+                                    }} style={{width:"1px"}}>x</Button>
+                              </ButtonGroup>
                             </a>
                           </Grid>
-                      ))))}
+                      ))
+
+                      ))}
                       
                 </Grid>
                 <br/>
                 <div>
-                  <Button variant="outlined" onClick={handleClickOpen}>
+                  <Button variant="contained" style={{color:"white"}} onClick={handleClickOpen}>
                     Ajouter
                   </Button>
                   <Dialog open={openM} onClose={handleClose}>
@@ -189,7 +232,8 @@ const Row = props => {
                             <input
                               hidden
                               type='file'
-                              multiple
+                              
+                              // multiple
                               onChange={onChange}
                               accept='image/pdf, image/docx'
                               id='account-settings-upload-image'

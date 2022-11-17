@@ -66,9 +66,9 @@ const TabAccount = () => {
     setFiles([])
   }
 
-  const downloadFile = (url) => {
-    return (<link href={`${process.env.API_URL}${url}`} download></link>)
-  }
+  // const downloadFile = (url) => {
+  //   return (<link href={`${process.env.API_URL}${url}`} download></link>)
+  // }
 
   useEffect(async () => {
     if(!listFile){
@@ -105,7 +105,8 @@ const TabAccount = () => {
                   <input
                     hidden
                     type='file'
-                    multiple
+                    
+                    // multiple
                     onChange={onChange}
                     accept='image/pdf, image/docx'
                     id='account-settings-upload-image'
