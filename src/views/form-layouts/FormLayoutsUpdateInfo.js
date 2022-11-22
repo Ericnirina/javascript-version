@@ -34,7 +34,7 @@ import { styled } from '@mui/material/styles'
 import { addFile, getFileById } from 'src/service/files'
 import Autocomplete from '@mui/material/Autocomplete';
 import { getNumDossier } from 'src/service/addNumDossier';
-import { informations } from 'src/service/information';
+import { deleteInfo, informations } from 'src/service/information';
 import { updateInfo } from 'src/service/updateInfo';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -42,6 +42,16 @@ import 'react-toastify/dist/ReactToastify.css';
 const CustomInput = forwardRef((input, ref) => {
     return <TextField fullWidth {...input} inputRef={ref} label='Prochain audience' autoComplete='off' />
 })
+
+const ResetButtonStyled = styled(Button)(({ theme }) => ({
+  marginLeft: theme.spacing(4.5),
+  [theme.breakpoints.down('sm')]: {
+    width: '100%',
+    marginLeft: 0,
+    textAlign: 'center',
+    marginTop: theme.spacing(4)
+  }
+}))
 
 export default function FormLayoutsUpdateInfo (props){
     const [dossier, setDossier] = useState()
@@ -95,8 +105,10 @@ export default function FormLayoutsUpdateInfo (props){
 
   
   
-  const handlerReset = () => {
-    setFiles([])
+  const handlerDelete = async() => {
+    console.log(idInfo)
+    await deleteInfo(idInfo);
+    window.location.reload()
   }
 
   const [vnomPartie, setNomPartie]= useState(' ')
@@ -141,7 +153,7 @@ export default function FormLayoutsUpdateInfo (props){
 
   return (
     <Card>
-      <CardHeader title='Modifier information' titleTypographyProps={{ variant: 'h6' }} />
+      <CardHeader title='Modifier ou supprimer information' titleTypographyProps={{ variant: 'h6' }} />
       <Divider sx={{ margin: 0 }} />
       <Formik
                 
@@ -428,6 +440,9 @@ export default function FormLayoutsUpdateInfo (props){
                     }}>
                       Valider
                     </Button>
+                    <ResetButtonStyled color='error' variant='outlined' onClick={() => handlerDelete()}>
+                      Supprimer
+                    </ResetButtonStyled>
                    
                   </CardActions>
                 </form>
