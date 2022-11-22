@@ -390,7 +390,7 @@ export default function FormLayoutsSeparator (){
                             <MenuItem value='Réponse à Proposition d’accord amiable à émettre'>Réponse à Proposition d’accord amiable à émettre</MenuItem>
                             <MenuItem value='Attente de la rédaction de la décision'>Attente de la rédaction de la décision</MenuItem>
                             <MenuItem value='Décision transmis à l’huissier pour exécution'>Décision transmis à l’huissier pour exécution</MenuItem>
-                            <MenuItem value='Décision remis au client'>Décision remise au client</MenuItem>
+                            <MenuItem value='Décision remis au client'>Décision remis au client</MenuItem>
                             <MenuItem value='Déportation de l’affaire, dossier remis au client'>Déportation de l’affaire, dossier remis au client</MenuItem>
                             <MenuItem value='Désistement à produire'>Désistement à produire</MenuItem>
                             <MenuItem value='Protocole transactionnelle à faire signer'>Protocole transactionnelle à faire signer</MenuItem>
