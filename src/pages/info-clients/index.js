@@ -161,7 +161,7 @@ const MUITable = () => {
         <Typography variant='h6'>
             Listes des affaires
         </Typography>
-        <Typography variant='body2'><i>Cliquez sur le numéros de dossier pour accéder aux différentes écritures de la procédure</i></Typography>
+        <Typography variant='body2'><i>Cliquez sur l'icone de la flèche pour accéder aux différentes écritures de la procédure</i></Typography>
       </Grid>
       <Grid item xs={6} container alignItems="flex-end" direction="column" justifyContent="flex-end">
         
