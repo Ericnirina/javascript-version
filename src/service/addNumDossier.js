@@ -12,3 +12,11 @@ export const addNumDossier = (numeroDossier,id) =>{
 return response;
     
 }
+
+export const getNumDossier = async() =>{
+    const response = await api.get(`/informations?fields[0]=numeroDossier`)
+    console.log(response)
+    
+return response;
+    
+}

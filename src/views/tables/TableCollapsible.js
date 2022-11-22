@@ -28,6 +28,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import FormLayoutsSeparator from '../form-layouts/FormLayoutsUpdateInfo'
 
 // ** Icons Imports
 import ChevronUp from 'mdi-material-ui/ChevronUp'
@@ -67,6 +68,7 @@ const Row = props => {
   const [open, setOpen] = useState(false)
   const [listFile, setlistFile] = useState([])
   const [openM, setOpenM] = useState(false);
+  const [openChange, setOpenChange] = useState(false);
   const [files, setFiles]= useState([])
 
   const onChange = async (e) => {
@@ -82,6 +84,14 @@ const Row = props => {
 
   const handleClose = () => {
     setOpenM(false);
+  };
+
+  const handleChangeClickOpen = () => {
+    setOpenChange(true);
+  };
+
+  const handleChangeClose = () => {
+    setOpenChange(false);
   };
 
   const ResetButtonStyled = styled(Button)(({ theme }) => ({
@@ -134,7 +144,11 @@ const Row = props => {
   return (
     <Fragment>
       
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }} style={{cursor:"pointer"}} 
+          onClick={()=>{
+            handleChangeClickOpen()
+          }}
+      >
         <TableCell>
           <IconButton aria-label='expand row' size='small' onClick={async() => {
             setOpen(!open)
@@ -268,6 +282,26 @@ const Row = props => {
           </Collapse>
         </TableCell>
       </TableRow>
+      <Dialog open={openChange} onClose={handleChangeClose}>
+      <DialogTitle>Modifier des informations</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Ici, vous pouvez modifier les informations
+        </DialogContentText>
+        
+        <FormLayoutsSeparator/>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleChangeClose}>Cancel</Button>
+        <Button onClick={async()=>{
+          
+          const added = await addFile(files,"ajout admin", row.id)
+          console.log(added)
+          handleClose()
+          window.location.reload();
+        }}>Valider</Button>
+      </DialogActions>
+    </Dialog>
     </Fragment>
   )
 }
