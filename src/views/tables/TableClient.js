@@ -96,13 +96,7 @@ const Row = props => {
                                   (file.attributes.name).length<20 ? file.attributes.name : (file.attributes.name).slice(0,19)+"..."
                                   }
                                 </Button>
-                                  <Button onClick={async (e)=>{
-                                    e.preventDefault()
-                                    const del = await deleteFileById(value.id)
-                                    console.log(del)
-                                    window.location.reload()
-                                    
-                                    }} style={{width:"1px"}}>x</Button>
+                                  
                               </ButtonGroup>
                             </a>
                           </Grid>
