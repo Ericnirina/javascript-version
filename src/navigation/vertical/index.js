@@ -32,7 +32,7 @@ const navigation = () => {
       icon: GoogleCirclesExtended
     },
     {
-      title: 'Modifier information',
+      title: 'Modifier ou supprimer information',
       path: '/update-info',
       icon: GoogleCirclesExtended
     },
