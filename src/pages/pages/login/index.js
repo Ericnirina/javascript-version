@@ -89,7 +89,14 @@ const LoginPage = () => {
       <Card sx={{ zIndex: 1 }}>
         <CardContent sx={{ padding: theme => `${theme.spacing(12, 9, 7)} !important` }}>
           <Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Typography
+            <img
+              src='/images/logo.jpg'
+              alt="Picture"
+              style={{ marginTop : 5}}
+              width={130}
+              height={70}
+            />
+            {/* <Typography
               variant='h6'
               sx={{
                 ml: 3,
@@ -100,6 +107,21 @@ const LoginPage = () => {
               }}
             >
               Connectez-vous
+            </Typography> */}
+          </Box>
+          <Box sx={{ mb: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 15 }}>
+            <Typography
+              variant='h7'
+              sx={{
+                ml: 3,
+                lineHeight: 1,
+                fontWeight: 100,
+
+                // textTransform: 'uppercase',
+                fontSize: '1rem !important'
+              }}
+            >
+              Bienvenue sur le Portail Client du Cabinet !
             </Typography>
           </Box>
           {/* <Box sx={{ mb: 6 }}>

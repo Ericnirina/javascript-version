@@ -3,6 +3,10 @@ import Grid from '@mui/material/Grid'
 import Link from '@mui/material/Link'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
+import SearchIcon from 'mdi-material-ui/TabSearch'
+import CancelIcon from 'mdi-material-ui/Close'
+import TextField from '@mui/material/TextField'
+
 
 // ** Demo Components Imports
 import React from 'react'
@@ -14,8 +18,27 @@ import TableCollapsible from 'src/views/tables/TableCollapsible'
 import { clients } from 'src/service/clients'
 
 
+
 const MUITable = () => {
   const[dataClients, setDataClients] = useState();
+  const[data, setData] = useState();
+  const [searched, setSearched] = useState("");
+
+  const requestSearch = (e) => {
+    setSearched(e.target.value)
+    console.log(e.target.value)
+
+    const filteredRows = data.filter((row) => {
+      return row.numeroDossier.includes(e.target.value)
+    });
+
+    setDataClients(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setDataClients(data);
+    setSearched("");
+  }; 
   
   const createData = (id,numeroDossier,nomClient, nomPartie, nomPartieAdverse, juridiction, etatProcedure, dateProchainAudiance) => {
     return {
@@ -74,7 +97,8 @@ const MUITable = () => {
           (datas.attributes.dateProchainAudiance),)
 
       })
-      setDataClients(allclient);
+      setDataClients(allclient)
+      setData(allclient)
       console.log(res)
 
       console.log(allclient)
@@ -83,17 +107,38 @@ const MUITable = () => {
     } 
   }, [dataClients, rows])
 
+  const search = ()=>{
+    return(<h1>A</h1>)
+  }
+
   return (
     <Grid container spacing={6}>
-      <Grid item xs={12}>
+      <Grid item xs={6}>
         <Typography variant='h5'>
-          <Link href='https://mui.com/components/tables/' target='_blank'>
             Listes de toutes les informations
-          </Link>
         </Typography>
         <Typography variant='body2'>Vous pouvez vérifier toutes les informations ou ajouter des fichiers</Typography>
       </Grid>
-    
+      <Grid item xs={6} container alignItems="flex-end" direction="column" justifyContent="flex-end">
+        
+          <Typography variant='p'>
+                Recherche par numero de dossier
+          </Typography>
+      <TextField
+          size="small"
+          variant="outlined"
+          value={searched}
+          onChange={(e) => requestSearch(e)}
+          InputProps={{
+            startAdornment: (
+                <SearchIcon style={{ marginRight: 9}}/>
+            ),
+            endAdornment: (
+              <CancelIcon style={{cursor:"pointer"}} onClick={() => cancelSearch()} />
+            )
+          }}
+        />
+      </Grid>
       <Grid item xs={12}>
         <Card>
           <TableCollapsible tableData={dataClients}/>

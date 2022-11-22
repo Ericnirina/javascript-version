@@ -111,7 +111,7 @@ const UserDropdown = () => {
             <Box sx={{ display: 'flex', marginLeft: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography sx={{ fontWeight: 600 }}> { user.username } </Typography>
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                Admin
+                { user.access }
               </Typography>
             </Box>
           </Box>
@@ -157,7 +157,7 @@ const UserDropdown = () => {
         <Divider />
         <MenuItem sx={{ py: 2 }} onClick={() => handleLogout()}>
           <LogoutVariant sx={{ marginRight: 2, fontSize: '1.375rem', color: 'text.secondary' }} />
-          Logout
+            Déconnexion
         </MenuItem>
       </Menu>
     </>
