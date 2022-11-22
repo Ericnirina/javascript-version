@@ -22,6 +22,8 @@ import { informations } from 'src/service/information';
 import { getFileById } from 'src/service/files';
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
+import ButtonGroup from '@mui/material/ButtonGroup';
+
 
 // ** Icons Imports
 import ChevronUp from 'mdi-material-ui/ChevronUp'
@@ -51,7 +53,7 @@ const Row = props => {
             id_file.map(async (row)=>{
               const data = await getFileById(row)
               if(listFile.length === 0)
-              setlistFile(current => [...current, data.attributes.file.data])
+              setlistFile(current => [...current, data])
               
             })
 
@@ -77,24 +79,36 @@ const Row = props => {
               </Typography>
               <Table size='small' aria-label='purchases'>
                
-                <Grid item xs={12} container spacing={2}>
-                  { listFile && Object.values(listFile).map((value) => (
-                      value.map((file) =>(
+              <Grid item xs={12} container spacing={4}>
+                  { listFile && (listFile).map((value) => (
+                      console.log(value),
+                      value.attributes.file?.data?.map((file) =>(
                         // eslint-disable-next-line react/jsx-key
                           <Grid item sm={4} xs={12}>
                             <a href={`${process.env.API_URL}${file.attributes.url}`} target='_blank' rel="noreferrer" style={{ textDecoration: "none"}}>
-                              <Button 
-                                variant='outlined' 
-                                sx={{ marginRight: 3.5 }} 
-                                style={{
-                                  borderRadius: "70px",
-                                  fontWeight: "200"
-                              }}>
-                                {file.attributes.name}
-                              </Button>
+                              <ButtonGroup>
+
+                                <Button 
+                                  variant='outlined' 
+                                 
+                                >
+                                  {
+                                  (file.attributes.name).length<20 ? file.attributes.name : (file.attributes.name).slice(0,19)+"..."
+                                  }
+                                </Button>
+                                  <Button onClick={async (e)=>{
+                                    e.preventDefault()
+                                    const del = await deleteFileById(value.id)
+                                    console.log(del)
+                                    window.location.reload()
+                                    
+                                    }} style={{width:"1px"}}>x</Button>
+                              </ButtonGroup>
                             </a>
                           </Grid>
-                      ))))}
+                      ))
+
+                      ))}
                       
                 </Grid>
                 
