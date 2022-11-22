@@ -144,10 +144,8 @@ const Row = props => {
   return (
     <Fragment>
       
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }} style={{cursor:"pointer"}} 
-          onClick={()=>{
-            handleChangeClickOpen()
-          }}
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }} 
+          
       >
         <TableCell>
           <IconButton aria-label='expand row' size='small' onClick={async() => {
@@ -195,7 +193,7 @@ const Row = props => {
                 <Grid item xs={12} container spacing={4}>
                   { listFile && (listFile).map((value) => (
                       console.log(value),
-                      value.attributes.file.data.map((file) =>(
+                      value.attributes.file?.data?.map((file) =>(
                         // eslint-disable-next-line react/jsx-key
                           <Grid item sm={4} xs={12}>
                             <a href={`${process.env.API_URL}${file.attributes.url}`} target='_blank' rel="noreferrer" style={{ textDecoration: "none"}}>
