@@ -22,29 +22,21 @@ export const addFile = async (files, nom,id) =>{
         information : id
     }
     console.log(id)
-    const data = new FormData();
     
-    data.append('data',  JSON.stringify(text));
     for (let i = 0; i < files.length; i++) {
-        data.append('files.file', files[i]);
-    }
-    
-    console.log(info)
-    
-    console.log(text)
-    
-    // data.append('files.file', file);
 
-    // const response = await axios.post('http://localhost:1337/api/fichiers', data, config)
-    const response = axios({
-        method: "post",
-        url: `${process.env.API_URL}/api/fichiers`,
-        data: data
-      })
-    console.log(response.data)
-    
-return response;
-    
+        const data = new FormData();
+        data.append('data',  JSON.stringify(text));
+        data.append('files.file', files[i]);
+        console.log(data)
+        axios({
+            method: "post",
+            url: `${process.env.API_URL}/api/fichiers`,
+            data: data
+        })
+    }
+
+    return true
 }
 
 export const updateFile = async (files, FileId) =>{

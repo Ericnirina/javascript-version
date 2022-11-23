@@ -246,8 +246,7 @@ const Row = props => {
                             <input
                               hidden
                               type='file'
-                              
-                              // multiple
+                              multiple
                               onChange={onChange}
                               accept='image/pdf, image/docx'
                               id='account-settings-upload-image'
