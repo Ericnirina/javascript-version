@@ -12,7 +12,8 @@ export const updateInfo = (id, nomPartie,nomPartieAdverse,nomClient,etatProcedur
             dateProchainAudiance : prochainAudience,
         }
       })
-    console.log(response)
+      
+    // console.log(response)
     
 return response;
     
