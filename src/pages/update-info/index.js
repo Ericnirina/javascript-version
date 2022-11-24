@@ -17,9 +17,11 @@ import { getNumDossier } from 'src/service/addNumDossier'
 
 export default function FormLayouts (){
 
-const [dossier, setDossier] = useState()
+const [dossier, setDossier] = useState();
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async() => {
+        
         if (!dossier) {
             const num = await getNumDossier()
             

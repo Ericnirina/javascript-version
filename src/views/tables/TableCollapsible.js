@@ -180,6 +180,9 @@ const Row = props => {
         <TableCell align='right'>{row?.juridiction}</TableCell>
         <TableCell align='right'>{row?.etatProcedure}</TableCell>
         <TableCell align='right'>{moment(row?.dateProchainAudiance).format("DD/MM/YY")}</TableCell>
+        <TableCell align='right'>{row?.email}</TableCell>
+        <TableCell align='right'>{row?.telephone}</TableCell>
+        <TableCell align='right'>{row?.adresse}</TableCell>
       </TableRow>
       <TableRow>
         <TableCell colSpan={6} sx={{ py: '0 !important' }}>
@@ -432,13 +435,16 @@ const TableCollapsible = (props) => {
       <Table stickyHeader aria-label='sticky table'>
         <TableHead>
           <TableRow>
-          <TableCell />
-          <TableCell>N° Dossier</TableCell>
-          {columns.map(column => (
-                <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
-                  {column.label}
-                </TableCell>
-              ))}
+            <TableCell />
+            <TableCell>N° Dossier</TableCell>
+            {columns.map(column => (
+                  <TableCell key={column.id} align={column.align} sx={{ minWidth: column.minWidth }}>
+                    {column.label}
+                  </TableCell>
+                ))}
+            <TableCell align="right" sx={{minWidth : 170}}>Email</TableCell>
+            <TableCell align="right" sx={{minWidth : 170}}>Telephone</TableCell>
+            <TableCell align="right" sx={{minWidth : 170}}>Adresse</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

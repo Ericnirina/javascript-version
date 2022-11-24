@@ -1,5 +1,5 @@
-import { forwardRef, useState,useEffect } from 'react'
-/* eslint-disable react-hooks/exhaustive-deps */
+import { useState,useEffect } from 'react'
+
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 
@@ -15,8 +15,10 @@ import { allUser } from 'src/service/allUser'
 
 
 const updateUSer = () => {
+
     const [allUSer, setAllUSer] = useState()
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(async () => {
         if (!allUSer) {
             const res = await allUser()

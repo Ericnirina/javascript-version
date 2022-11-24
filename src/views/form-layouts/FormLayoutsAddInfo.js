@@ -286,13 +286,16 @@ export default function FormLayoutsAddInfo (props){
                             <MenuItem value='Proposition d’accord amiable à soumettre à l’autre partie'>Proposition d’accord amiable à soumettre à l’autre partie</MenuItem>
                             <MenuItem value='Réponse à Proposition d’accord amiable à émettre'>Réponse à Proposition d’accord amiable à émettre</MenuItem>
                             <MenuItem value='Attente de la rédaction de la décision'>Attente de la rédaction de la décision</MenuItem>
-                            <MenuItem value='Décision transmis à l’huissier pour exécution'>Décision transmis à l’huissier pour exécution</MenuItem>
-                            <MenuItem value='Décision remis au client'>Décision remise au client</MenuItem>
+                            <MenuItem value='Décision transmise à l’huissier pour exécution'>Décision transmise à l’huissier pour exécution</MenuItem>
+                            <MenuItem value='Décision remise au client'>Décision remise au client</MenuItem>
                             <MenuItem value='Déportation de l’affaire, dossier remis au client'>Déportation de l’affaire, dossier remis au client</MenuItem>
                             <MenuItem value='Désistement à produire'>Désistement à produire</MenuItem>
                             <MenuItem value='Protocole transactionnelle à faire signer'>Protocole transactionnelle à faire signer</MenuItem>
-                            <MenuItem value='Attente des instructions du client'>Attente des instructions du client</MenuItem>
+                            <MenuItem value='Attente des instructions du client'>Attente des iintroduirenstructions du client</MenuItem>
                             <MenuItem value='Voies de recours à introduire'>Voies de recours à introduire</MenuItem>
+                            <MenuItem value='Attente de l’audience des plaidoiries et/ou des observations orales'>Attente de l’audience des plaidoiries et/ou des observations orales</MenuItem>
+                            <MenuItem value='Note en délibéré à produire'>Note en délibéré à produire</MenuItem>
+                            <MenuItem value='Demande d’enrôlement à dépose'>Demande d’enrôlement à dépose</MenuItem>
                             
                           </Select>
                         </FormControl>
@@ -343,6 +346,7 @@ export default function FormLayoutsAddInfo (props){
                             <MenuItem value='Conseil de Discipline Professionnelle'>Conseil de Discipline Professionnelle</MenuItem>
                             <MenuItem value='Inspection du Travail'>Inspection du Travail</MenuItem>
                             <MenuItem value="Cour d'Appel de droit commun">Cour d'Appel de droit commun</MenuItem>
+                            <MenuItem value='Juridiction d’exception'>Juridiction d’exception</MenuItem>
                             <MenuItem value='Autre'>Autre</MenuItem>
                           </Select>
 

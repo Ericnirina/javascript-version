@@ -40,7 +40,7 @@ const MUITable = () => {
     setSearched("");
   }; 
   
-  const createData = (id,numeroDossier,nomClient, nomPartie, nomPartieAdverse, juridiction, etatProcedure, dateProchainAudiance) => {
+  const createData = (id,numeroDossier,nomClient, nomPartie, nomPartieAdverse, juridiction, etatProcedure, dateProchainAudiance, email, telephone, adresse) => {
     return {
       id,
       numeroDossier,
@@ -50,6 +50,9 @@ const MUITable = () => {
       juridiction,
       etatProcedure,
       dateProchainAudiance,
+      email,
+      telephone,
+      adresse,
       history: [
         {
           date: '2020-01-05',
@@ -94,7 +97,12 @@ const MUITable = () => {
           datas.attributes.nomPartieAdverse,
           datas.attributes.juridiction, 
           datas.attributes.etatProcedure,
-          (datas.attributes.dateProchainAudiance),)
+          (datas.attributes.dateProchainAudiance),
+          datas.attributes.user.data?.attributes?.email,
+          datas.attributes.user.data?.attributes?.telephone,
+          datas.attributes.user.data?.attributes?.adresse,
+          
+          )
 
       })
       setDataClients(allclient)
