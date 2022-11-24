@@ -106,9 +106,11 @@ export default function FormLayoutsUpdateInfo (props){
   
   
   const handlerDelete = async() => {
-    console.log(idInfo)
-    await deleteInfo(idInfo);
-    window.location.reload()
+    // console.log(idInfo)
+    if(idInfo){
+      await deleteInfo(idInfo);
+      window.location.reload()
+    }
   }
 
   const [vnomPartie, setNomPartie]= useState(' ')
