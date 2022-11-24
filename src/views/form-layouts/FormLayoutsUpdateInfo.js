@@ -187,10 +187,16 @@ export default function FormLayoutsUpdateInfo (props){
                     try { 
                       
                         const info = await updateInfo(idInfo, vnomPartie,vnomPartieAdverse,vnomClient,vetatProcedure,vjuridiction,vprochainAudience)
-                        console.log(info)
-                        resetForm(); 
-                        setStatus({ success: true }); 
-                        setSubmitting(true);
+                        console.log(info.data.id)
+
+                        const file = await addFile(files, "test",info.data.id)
+
+                        console.log(file)
+                        
+                        // // console.log(info)
+                        // resetForm(); 
+                        // setStatus({ success: true }); 
+                        // setSubmitting(true);
                       
 
                       } catch (err) { 
@@ -425,6 +431,33 @@ export default function FormLayoutsUpdateInfo (props){
                         
                     
                     </Grid>
+                    <Grid item xs={12} sx={{ marginTop: 4.8, marginBottom: 3 }}>
+                        { files.length !== 0  ? Object.values(files).map( (key, value) => (
+                          // eslint-disable-next-line react/jsx-key
+                          <p> { key.name } </p>
+                        )) : <p>Pas de fichier!</p>}
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}> 
+                        <Box>
+                          <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
+                            Telecharger le fichier
+                            <input
+                              hidden
+                              type='file'
+                              multiple
+                              onChange={onChange}
+                              accept='image/pdf, image/docx'
+                              id='account-settings-upload-image'
+                            />
+                          </ButtonStyled>
+                          <ResetButtonStyled color='error' variant='outlined' onClick={() => handlerReset()}>
+                            Reset
+                          </ResetButtonStyled>
+                          <Typography variant='body2' sx={{ marginTop: 5 }}>
+                            docx, pdf, jpg, png, xlsx, ...
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Grid>
                    
                   </CardContent>
                   <Divider sx={{ margin: 0 }} />
@@ -435,7 +468,9 @@ export default function FormLayoutsUpdateInfo (props){
                     onClick={async(e)=>{
                         e.preventDefault()
                         const info = await updateInfo(idInfo, vnomPartie,vnomPartieAdverse,vnomClient,vetatProcedure,vjuridiction,vprochainAudience)
-                        console.log(info)
+                        if(files){
+                          await addFile(files, "test",info.data.data.id)
+                        }
                         toast.success('Modification enregistré')
                     }}>
                       Valider
