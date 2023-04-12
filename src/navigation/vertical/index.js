@@ -37,8 +37,13 @@ const navigation = () => {
       icon: GoogleCirclesExtended
     },
     {
-      title: 'Modifier utilisateur',
+      title: 'Modifier utilisateurs',
       path: '/update-user',
+      icon: GoogleCirclesExtended
+    },
+    {
+      title: 'Agenda',
+      path: '/agenda',
       icon: GoogleCirclesExtended
     },
   ]
