@@ -11,6 +11,7 @@ import { Scheduler } from "@aldabil/react-scheduler";
 import 'moment/locale/fr';
 import navigation from 'src/navigation/vertical';
 import { fr } from 'date-fns/locale';
+import { Edit } from '@mui/icons-material';
 
 // Setup the localizer by providing the moment (or globalize, or Luxon) Object
 // to the correct localizer.
@@ -44,7 +45,29 @@ const events = [
   },
 ]
 
-const translations = { }
+const translations = {
+  navigation: {
+  month: "Mois",
+  week: "Semaines",
+  day: "Jours",
+  today: "Ajourd'hui"
+  },
+  form: {
+  addTitle: "Ajouter",
+  editTitle: "Modifier",
+  confirm: "Confirmer",
+  delete: "Supprimer",
+  cancel: "Annuler"
+  },
+  event: {
+  title: "Description",
+  start: "Debut",
+  end: "Fin",
+  allDay: "Toute la journée"
+ },
+  moreEvents: "Plus...",
+  loading: "En cours..."
+}
 
 
 
@@ -77,48 +100,14 @@ const agenda = () => {
       <CardHeader title='Agenda' titleTypographyProps={{ variant: 'h6' }} />
 
         <Scheduler
-          view="week"
+          view="month"
           events={events}
           selectedDate={new Date()}
-          translations={{navigation : {months : "Mois"}}}
           locale={fr}
+          translations={translations}
+          draggable="true"
+          editable="true"
         />
-        {/* <Calendar
-            views={["month", "agenda"]}
-            selectable
-            localizer={localizer}
-            defaultDate={new Date()}
-            defaultView="month"
-
-            components={{
-              event: Event,
-              toolbar: CustomToolbar,
-              dateCellWrapper: Book, 
-              month: { event: Event },
-              agenda : {event : Event}
-            }}
-            events={events}
-            onSelectEvent={(event) => alert(event.title)}
-
-            onSelectSlot={(event) => handleSelect(event)}
-            startAccessor="start"
-            endAccessor="end"
-
-            // eventPropGetter={eventStyleGetter}
-            eventPropGetter={(event) => {
-              const backgroundColor = event.color;
-
-              return { style: { backgroundColor } }
-            }}
-            style={{ height: 500  }}
-
-            messages={{
-              month: "Mois",
-            }}
-        />
-        {
-          isOpen && <renderModal></renderModal>
-        } */}
     </Card>
   )
 }

@@ -1,14 +1,12 @@
 // ** Icon imports
-import Login from 'mdi-material-ui/Login'
-import Table from 'mdi-material-ui/Table'
-import CubeOutline from 'mdi-material-ui/CubeOutline'
 import HomeOutline from 'mdi-material-ui/HomeOutline'
-import FormatLetterCase from 'mdi-material-ui/FormatLetterCase'
-import AccountCogOutline from 'mdi-material-ui/AccountCogOutline'
-import CreditCardOutline from 'mdi-material-ui/CreditCardOutline'
-import AccountPlusOutline from 'mdi-material-ui/AccountPlusOutline'
-import AlertCircleOutline from 'mdi-material-ui/AlertCircleOutline'
 import GoogleCirclesExtended from 'mdi-material-ui/GoogleCirclesExtended'
+import { Delete } from '@mui/icons-material'
+import TocIcon from '@mui/icons-material/Toc';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import EventIcon from '@mui/icons-material/Event';
 
 const navigation = () => {
   return [
@@ -23,28 +21,28 @@ const navigation = () => {
     {
       title: 'Toutes les informations',
       path: '/tables',
-      icon: GoogleCirclesExtended
+      icon: TocIcon
     },
     
     {
       title: 'Ajout information',
       path: '/info-add',
-      icon: GoogleCirclesExtended
+      icon: NoteAddIcon
     },
     {
       title: 'Modifier ou supprimer information',
       path: '/update-info',
-      icon: GoogleCirclesExtended
+      icon: BorderColorIcon
     },
     {
       title: 'Modifier utilisateurs',
       path: '/update-user',
-      icon: GoogleCirclesExtended
+      icon: ManageAccountsIcon
     },
     {
       title: 'Agenda',
       path: '/agenda',
-      icon: GoogleCirclesExtended
+      icon: EventIcon
     },
   ]
 }

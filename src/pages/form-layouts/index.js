@@ -5,8 +5,8 @@ import Grid from '@mui/material/Grid'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
 // ** Demo Components Imports
-import FormLayoutsBasic from 'src/views/form-layouts/FormLayoutsBasic'
-import FormLayoutsIcons from 'src/views/form-layouts/FormLayoutsIcons'
+// import FormLayoutsBasic from 'src/views/form-layouts/FormLayoutsBasic'
+// import FormLayoutsIcons from 'src/views/form-layouts/FormLayoutsIcons'
 import FormLayoutsSeparator from 'src/views/form-layouts/FormLayoutsSeparator'
 import FormLayoutsAlignment from 'src/views/form-layouts/FormLayoutsAlignment'
 
